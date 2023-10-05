@@ -6,8 +6,6 @@ import com.influxdb.v3.client.write.WritePrecision;
 import io.bonitoo.qa.util.EncryptPass;
 import io.bonitoo.virtual.device.influx.conf.Config;
 import io.bonitoo.virtual.device.influx.conf.InfluxClientConfig;
-import io.bonitoo.virtual.device.influx.pojo.DoubleItem;
-import io.bonitoo.virtual.device.influx.pojo.Widget;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +20,6 @@ import java.net.URL;
 @Setter
 public class InfluxClient {
 
-//  String token = "sbuZeQg1BnK1PNmkF-C7RNczCSbKAHjghtYZHLTXCZYjc0bN8eKWLKZv0PgY7XM0mjkYNnTmKDcnV1_eLCRcPw==";
   String org = "qa";
   String bucket = "bucket";
 
