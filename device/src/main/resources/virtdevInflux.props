@@ -1,0 +1,7 @@
+default.ttl=30000
+device.conf=ossDeviceConfig.yml
+measurement.field=name
+generate.past=false
+#time.period.end=-20m
+time.period.span=10m
+time.period.start=-30m

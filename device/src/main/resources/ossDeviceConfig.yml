@@ -1,0 +1,50 @@
+---
+id: "OSS_TEST_DEVICE"
+name: "testDeviceFromYaml"
+description: "A Device From ossDeviceConfig.yml"
+client:
+  org: "qa"
+  bucket: "TEST_BUCKET"
+  token: "Q2_rIb7eqKkMdH9cZHGYTknbnzHgM27g2VhCFtGRsItcXRy0ugouBFA_m3zqmhFYwyUQQN3fiBYC-wfuju4OMQ=="
+  hostUrl: "http://localhost:8086"
+samples:
+  - name: "sConfig1"
+    id: "random"
+    topic: "temp/tucnak"
+    items:
+      - name: "icDouble1"
+        label: "dbl"
+        type: "Double"
+        count: 1
+        arType: "Undefined"
+        max: 20.0
+        min: -10.0
+        period: 2.0
+        dev: 0.17
+      - name: "icDouble2"
+        label: "flt"
+        type: "Double"
+        count: 1
+        arType: "Undefined"
+        max: 0.0
+        min: -100.0
+        period: 1.0
+        dev: 0.33
+      - name: "icString1"
+        label: "team"
+        type: "String"
+        count: 1
+        arType: "Undefined"
+        values:
+          - "Arsenal"
+          - "ManCity"
+          - "Liverpool"
+          - "NewCastle"
+          - "ManUnited"
+    arType: "Undefined"
+    plugin: null
+    stringFields:
+      - "icString1"
+interval: 1000
+jitter: 0
+count: 1
