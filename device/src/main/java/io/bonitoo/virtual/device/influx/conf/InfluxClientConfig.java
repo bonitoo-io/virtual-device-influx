@@ -13,6 +13,8 @@ import lombok.Setter;
 @JsonDeserialize(using = InfluxClientConfigDeserializer.class)
 public class InfluxClientConfig {
 
+  // TODO - also get token from ENVARS - which should have precedence over all others
+
   String org;
   String bucket;
   String token;
