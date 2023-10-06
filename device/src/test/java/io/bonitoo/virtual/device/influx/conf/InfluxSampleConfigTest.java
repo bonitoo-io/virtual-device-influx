@@ -8,14 +8,13 @@ import io.bonitoo.qa.conf.data.ItemConfig;
 import io.bonitoo.qa.conf.data.ItemNumConfig;
 import io.bonitoo.qa.conf.data.ItemStringConfig;
 import io.bonitoo.qa.data.ItemType;
-import org.checkerframework.checker.units.qual.min;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 public class InfluxSampleConfigTest {
 
-  static String influxSampleYaml = """
+  static final String influxSampleYaml = """
     ---
     name: "test"
     id: "9d816567-fd63-432e-b0da-18c44e05c554"

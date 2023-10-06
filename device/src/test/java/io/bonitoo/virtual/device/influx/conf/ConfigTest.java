@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.bonitoo.qa.conf.data.ItemConfigRegistry;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,9 +24,9 @@ public class ConfigTest {
   }
 
   @Test
-  public void readDeviceConfigTest() throws JsonProcessingException {
+  public void readDeviceConfigTest() {
     Config.readDeviceConfig();
-    ObjectWriter owy = new ObjectMapper(new YAMLFactory()).writer().withDefaultPrettyPrinter();
+//    ObjectWriter owy = new ObjectMapper(new YAMLFactory()).writer().withDefaultPrettyPrinter();
 //    System.out.println("DEBUG deviceConfig:\n" + owy.writeValueAsString(Config.getDeviceConfig()));
     assertEquals(1, Config.getDeviceConfig().getFluxSamples().size());
     assertEquals(0, Config.getDeviceConfig().getSamples().size());

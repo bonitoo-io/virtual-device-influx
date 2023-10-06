@@ -10,12 +10,12 @@ import java.util.List;
 
 public class StandardConfs {
 
-  public static InfluxClientConfig clientConf1 = new InfluxClientConfig("qa",
+  public static final InfluxClientConfig clientConf1 = new InfluxClientConfig("qa",
     "TEST_BUCKET",
     EncryptPass.encryptPass(Config.class.getCanonicalName().toCharArray(), Config.getOssToken().toCharArray()),
     "http://localhost:8086");
 
-  public static ItemConfig icDouble1 = new ItemNumConfig("icDouble1",
+  public static final ItemConfig icDouble1 = new ItemNumConfig("icDouble1",
     "dbl",
     ItemType.Double,
     -10,
@@ -23,7 +23,7 @@ public class StandardConfs {
     2.0,
     0.17);
 
-  public static ItemConfig icDouble2 = new ItemNumConfig("icDouble2",
+  public static final ItemConfig icDouble2 = new ItemNumConfig("icDouble2",
     "flt",
     ItemType.Double,
     -100,
@@ -31,7 +31,7 @@ public class StandardConfs {
     1,
     0.33);
 
-  public static ItemConfig icLong1 = new ItemNumConfig("icLong1",
+  public static final ItemConfig icLong1 = new ItemNumConfig("icLong1",
     "long",
     ItemType.Long,
     0,
@@ -39,7 +39,7 @@ public class StandardConfs {
     2,
     0.21);
 
-  public static ItemConfig icString1 = new ItemStringConfig("icString1",
+  public static final ItemConfig icString1 = new ItemStringConfig("icString1",
     "text",
     ItemType.String,
     List.of("Arsenal", "ManCity", "Liverpool", "NewCastle", "ManUnited"));

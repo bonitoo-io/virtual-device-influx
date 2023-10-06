@@ -2,7 +2,6 @@ package io.bonitoo.virtual.device.influx.client;
 
 
 import com.influxdb.v3.client.InfluxDBClient;
-import com.influxdb.v3.client.write.WritePrecision;
 import io.bonitoo.qa.util.EncryptPass;
 import io.bonitoo.virtual.device.influx.conf.Config;
 import io.bonitoo.virtual.device.influx.conf.InfluxClientConfig;
@@ -84,8 +83,12 @@ public class InfluxClient {
 
    */
 
-  public void close() throws Exception {
-    client.close();
+  public void close(){
+    try {
+      client.close();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

@@ -44,7 +44,7 @@ public class TimePeriodConf {
 
   protected static long parseTimeValToLong(String timeVal){
 
-    String parseMe = timeVal.toLowerCase().equals("now") ? "0ms"
+    String parseMe = timeVal.equalsIgnoreCase("now") ? "0ms"
       : timeVal;
 
 

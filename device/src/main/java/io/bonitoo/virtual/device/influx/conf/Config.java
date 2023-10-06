@@ -2,9 +2,7 @@ package io.bonitoo.virtual.device.influx.conf;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.bonitoo.qa.conf.RunnerConfig;
 import io.bonitoo.qa.conf.VirDevConfigException;
-import io.bonitoo.qa.conf.device.DeviceConfig;
 import io.bonitoo.qa.util.EncryptPass;
 import io.bonitoo.qa.util.LogHelper;
 import org.slf4j.Logger;
@@ -19,13 +17,13 @@ import java.util.Properties;
 
 public class Config {
 
-  static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+  static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   // TODO get config values from environment
 
   // TODO config values for IOX
 
-  static long DEFAULT_TTL = 60 * 1000;
+  static final long DEFAULT_TTL = 60 * 1000;
 
   static final String envConfigFile = "VIRTDEV_INFLUX_CONFIG";
 
@@ -41,11 +39,11 @@ public class Config {
   // TODO - should be replaced by runner for multiple devices - later
   static InfluxDeviceConfig deviceConfig;
 
-  static String ENVAR_PREFIX = "VIRDEV_INFLUX";
+  static final String ENVAR_PREFIX = "VIRDEV_INFLUX";
 
   public static final String MEASUREMENT_FIELD_KEY = "measurement.field";
 
-  static String configFile = System.getenv(envConfigFile) == null ? "virtdevInflux.props" :
+  static final String configFile = System.getenv(envConfigFile) == null ? "virtdevInflux.props" :
     System.getenv(envConfigFile).trim();
 
   public static final String GENERATE_PAST_KEY = "generate.past";
@@ -66,7 +64,7 @@ public class Config {
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
     logger.info(LogHelper.buildMsg("config", "Reading base config", configFile));
     try (
-      InputStream is = loader.getResourceAsStream(configFile) == null
+      InputStream is = (loader.getResourceAsStream(configFile) == null)
         ? Files.newInputStream(new File(configFile).toPath()) :
         loader.getResourceAsStream(configFile)) {
       props.load(is);

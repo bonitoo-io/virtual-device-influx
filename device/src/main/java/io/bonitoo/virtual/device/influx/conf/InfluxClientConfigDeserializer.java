@@ -18,7 +18,7 @@ public class InfluxClientConfigDeserializer extends VirDevDeserializer {
   }
 
   @Override
-  public InfluxClientConfig deserialize(JsonParser parser, DeserializationContext context) throws IOException, JacksonException {
+  public InfluxClientConfig deserialize(JsonParser parser, DeserializationContext context) throws IOException {
 
     JsonNode node = parser.getCodec().readTree(parser);
 

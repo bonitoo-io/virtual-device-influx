@@ -35,9 +35,7 @@ public class InfluxSampleConfig extends SampleConfig {
   public InfluxSampleConfig(InfluxSampleConfig sample) {
     super(sample);
     this.stringFields = new ArrayList<>();
-    for(String string : sample.getStringFields()){
-      this.stringFields.add(new String(string));
-    }
+    this.stringFields.addAll(sample.getStringFields());
   }
 
   @Override

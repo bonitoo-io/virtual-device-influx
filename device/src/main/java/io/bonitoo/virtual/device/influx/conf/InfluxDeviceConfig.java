@@ -2,14 +2,11 @@ package io.bonitoo.virtual.device.influx.conf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.bonitoo.qa.conf.data.SampleConfig;
 import io.bonitoo.qa.conf.device.DeviceConfig;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +81,7 @@ public class InfluxDeviceConfig extends DeviceConfig {
   public String toString(){
     StringBuffer samplesBuffer = new StringBuffer("[");
     for(InfluxSampleConfig sample : this.fluxSamples){
-      samplesBuffer.append("\n" + sample.toString() + ",");
+      samplesBuffer.append("\n").append(sample.toString()).append(",");
     }
     samplesBuffer.append("]");
     return String.format("client: %s, samples: %s",

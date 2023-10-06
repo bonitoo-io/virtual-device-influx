@@ -3,18 +3,14 @@ package io.bonitoo.virtual.device.influx.device;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.bonitoo.qa.VirtualDeviceRuntimeException;
 import io.bonitoo.qa.conf.data.SampleConfig;
-import io.bonitoo.qa.conf.device.DeviceConfig;
 import io.bonitoo.qa.data.GenericSample;
 import io.bonitoo.qa.data.Sample;
 import io.bonitoo.qa.device.Device;
-import io.bonitoo.qa.util.LogHelper;
 import io.bonitoo.virtual.device.influx.client.InfluxClient;
 import io.bonitoo.virtual.device.influx.client.SampleWriter;
 import io.bonitoo.virtual.device.influx.conf.Config;
 import io.bonitoo.virtual.device.influx.conf.InfluxDeviceConfig;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.net.MalformedURLException;
@@ -31,14 +27,12 @@ public class InfluxDevice extends Device {
 
   InfluxClient client;
 
-//  List<String> stringFields = new ArrayList<>();
   Map<String, List<String>> stringFields = new HashMap<>();
 
-  public InfluxDevice() throws MalformedURLException {
+  public InfluxDevice() {
     this.setConfig(null);
     this.setSampleList(new ArrayList<>());
     this.client = null;
-  //  this.client = InfluxClient.of("bonitoo", "CI_TEST", "https://us-east-1-1.aws.cloud2.influxdata.com");
   }
 
   public InfluxDevice(InfluxDeviceConfig config) throws MalformedURLException {
@@ -88,8 +82,7 @@ public class InfluxDevice extends Device {
       throw new VirtualDeviceRuntimeException("Expected Config.timePeriodConf to not be null");
     }
 
-    long startInstant = Config.getTimePeriodConf().getStart().toEpochMilli();
-    long nowInstant = startInstant;
+    long nowInstant = Config.getTimePeriodConf().getStart().toEpochMilli();
     long endInstant = Config.getTimePeriodConf().getStop().toEpochMilli();
 
     try {
@@ -109,19 +102,13 @@ public class InfluxDevice extends Device {
     } catch(JsonProcessingException jpe){
       throw new RuntimeException(jpe);
     }finally{
-      System.out.flush();
-      try{
-        client.getClient().close();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+      System.out.flush();  // TODO remove after cleanup of any System.out messages
+      client.close();
     }
 
   }
 
   protected void generateCurrentValues(){
-
-    // see SampleWriter.writeSampleWithTimestamp();
 
     System.out.println("DEBUG generateCurrentValues()");
 
@@ -154,12 +141,8 @@ public class InfluxDevice extends Device {
       throw new RuntimeException(e);
     } finally {
       System.out.println("DEBUG finally " + (ttl - System.currentTimeMillis()));
-      System.out.flush();
-      try {
-        client.getClient().close();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+      System.out.flush();  // TODO remove after cleanup of System.out calls
+        client.close();
     }
 
     System.out.println("DEBUG end RUN");

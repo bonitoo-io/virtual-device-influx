@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.bonitoo.qa.conf.VirDevConfigException;
 import io.bonitoo.qa.conf.VirDevDeserializer;
-import io.bonitoo.qa.conf.data.ItemConfig;
 import io.bonitoo.qa.conf.data.SampleConfigRegistry;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class InfluxDeviceConfigDeserializer extends VirDevDeserializer {
 
   @Override
   public InfluxDeviceConfig deserialize(JsonParser parser, DeserializationContext context)
-    throws IOException, JacksonException {
+    throws IOException {
 
     // TODO deserialze fields: id, name, etc.
 

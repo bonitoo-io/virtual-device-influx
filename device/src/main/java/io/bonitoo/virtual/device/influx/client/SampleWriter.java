@@ -10,13 +10,16 @@ import io.bonitoo.qa.data.Item;
 import io.bonitoo.qa.data.ItemType;
 import io.bonitoo.qa.data.Sample;
 import io.bonitoo.virtual.device.influx.conf.Config;
-import io.bonitoo.virtual.device.influx.conf.InfluxSampleConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
 
 public class SampleWriter {
+
+  static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private static class Field {
     Double _double = null;
@@ -78,8 +81,8 @@ public class SampleWriter {
   }
 
   private static class LPHolder {
-    HashMap<String, String> tags;
-    HashMap<String, Field> fields;
+    final HashMap<String, String> tags;
+    final HashMap<String, Field> fields;
 
     String name;
 
@@ -172,7 +175,7 @@ public class SampleWriter {
       lineProtocol.append(String.format(" %d", sample.getTimestamp()));
     }
 
-    System.out.println("DEBUG lineProtocol: " + lineProtocol.toString());
+    logger.info("Writing lineProtocol " + lineProtocol);
 
     ic.getClient().writeRecord(lineProtocol.toString(),
       new WriteParameters(ic.getBucket(),
