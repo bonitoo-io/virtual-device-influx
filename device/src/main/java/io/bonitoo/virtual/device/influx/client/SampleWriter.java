@@ -1,7 +1,7 @@
 package io.bonitoo.virtual.device.influx.client;
 
 import com.influxdb.v3.client.write.Point;
-import com.influxdb.v3.client.write.WriteParameters;
+import com.influxdb.v3.client.write.WriteOptions;
 import com.influxdb.v3.client.write.WritePrecision;
 import io.bonitoo.qa.conf.VirDevConfigException;
 import io.bonitoo.qa.conf.data.ItemConfig;
@@ -178,9 +178,9 @@ public class SampleWriter {
     logger.info("Writing lineProtocol " + lineProtocol);
 
     ic.getClient().writeRecord(lineProtocol.toString(),
-      new WriteParameters(ic.getBucket(),
-      ic.getOrg(),
-      WritePrecision.MS)
+      new WriteOptions(ic.getBucket(),
+            WritePrecision.MS,
+        WriteOptions.DEFAULT_GZIP_THRESHOLD)
     );
 
   }
@@ -208,7 +208,9 @@ public class SampleWriter {
       }
     }
 
-    ic.getClient().writePoint(p, new WriteParameters(ic.getBucket(), ic.getOrg(), WritePrecision.MS));
+    ic.getClient().writePoint(p, new WriteOptions(ic.getBucket(),
+      WritePrecision.MS,
+      WriteOptions.DEFAULT_GZIP_THRESHOLD));
 
   }
 

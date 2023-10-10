@@ -5,18 +5,9 @@
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/8.3/userguide/building_java_projects.html in the Gradle documentation.
  */
 
-/*
-configurations.runtimeClasspath{
-    resolutionStrategy.force("io.netty:netty-common:4.1.93.Final")
-}
-
- */
-
-
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
-
 }
 
 repositories {
@@ -27,16 +18,12 @@ repositories {
 
 dependencies {
 
-//    constraints {
-        implementation("io.netty:netty-common:4.1.93.Final") // {
- //           because("virtual-device has transitive dependency on 4.1.48.Final which is unusable here.")
- //       }
- //   }
+    implementation("io.netty:netty-common:4.1.93.Final") // {
 
     // influxdb2-client
     // implementation("com.influxdb:influxdb-client-java:6.7.0")
     // influxdb3-client
-    implementation("com.influxdb:influxdb3-java:0.1.0")
+    implementation("com.influxdb:influxdb3-java:0.3.0")
 
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
@@ -93,9 +80,3 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
     jvmArgs("--add-opens","java.base/java.nio=ALL-UNNAMED")
 }
-
-task("bar"){
-    println("BAR BAR!")
-}
-
-
