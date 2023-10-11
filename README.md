@@ -22,7 +22,7 @@ Once that prerequisite is met...
 Essential properties for setting up the device are defined in the file `virtdevInflux.props` in the directory `device/src/main/resources`.  The following properties are recognized. 
 
    * `default.ttl` - a default TTL to be used when generating live data.  This can be overridden in the YAML file specified by `device.conf` - see the next property definition.
-   * `device.conf` - a required property that indicates the name of the YAML config file that configures the device to be run.  Note that this follows the device config structure used in the `virtual-device` project.  One caveat is that, for now, in this project, it is not possible to forward declare items and samples.  These must all be defined within the device definition. 
+   * `device.conf` - a required property that indicates the name of the YAML config file that configures the device to be run.  Note that this follows the device config structure used in the `virtual-device` project.  One caveat is that, for now, in this project, it is not possible to forward declare items and samples.  These must all be defined within the device definition. At present this file needs to reside in a resources directory on the path, e.g. `device/src/main/resources`.
    * `measurement.name` - when serializing String data to `line protocol` format, which is the approach currently chosen for this project, it is necessary to have a String value representing the measurement part of the `line protocol` string.  Each sample created by the device maps to a single `line protocol` data point.  Values for this property can be:
       * `name` - use the sample name property for the measurement. 
       * `id` - use the sample id property for the measurement. 
