@@ -2,6 +2,7 @@ package io.bonitoo.virtual.device.influx.client;
 
 
 import com.influxdb.v3.client.InfluxDBClient;
+import com.influxdb.v3.client.config.ClientConfig;
 import io.bonitoo.qa.util.EncryptPass;
 import io.bonitoo.virtual.device.influx.conf.Config;
 import io.bonitoo.virtual.device.influx.conf.InfluxClientConfig;
@@ -60,10 +61,14 @@ public class InfluxClient {
       token = EncryptPass.decryptPass(Config.class.getCanonicalName().toCharArray(), config.getToken())
       : config.getToken().toCharArray();
 
+    ClientConfig cConfig = new ClientConfig.Builder()
+      .host(ic.url.toString())
+      .token(token)
+      .organization(ic.getOrg())
+      .database(ic.getBucket())
+      .build();
 
-    ic.client = InfluxDBClient.getInstance(ic.url.toString(),
-      token,
-      ic.getBucket());
+    ic.client = InfluxDBClient.getInstance(cConfig);
 
     return ic;
   }
