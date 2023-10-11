@@ -138,8 +138,6 @@ public class SampleWriter {
   // stringFields is a list of String values to be used as fields instead of tags
   public static void writeSample(Sample sample, InfluxClient ic, List<String> stringFields){
 
-    System.out.println("DEBUG InfluxClient ic:  " + ic);
-
     LPHolder lpHolder = new LPHolder(sample, stringFields);
 
     StringBuilder lineProtocol = new StringBuilder(lpHolder.getName());

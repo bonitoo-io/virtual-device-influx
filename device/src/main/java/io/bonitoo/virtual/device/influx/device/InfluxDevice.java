@@ -6,13 +6,17 @@ import io.bonitoo.qa.conf.data.SampleConfig;
 import io.bonitoo.qa.data.GenericSample;
 import io.bonitoo.qa.data.Sample;
 import io.bonitoo.qa.device.Device;
+import io.bonitoo.qa.util.LogHelper;
 import io.bonitoo.virtual.device.influx.client.InfluxClient;
 import io.bonitoo.virtual.device.influx.client.SampleWriter;
 import io.bonitoo.virtual.device.influx.conf.Config;
 import io.bonitoo.virtual.device.influx.conf.InfluxDeviceConfig;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +28,8 @@ import java.util.concurrent.locks.LockSupport;
 @Getter
 @Setter
 public class InfluxDevice extends Device {
+
+  static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   InfluxClient client;
 
@@ -78,6 +84,9 @@ public class InfluxDevice extends Device {
 
   protected void generatePastValues(){
 
+    logger.info("generating past values");
+    long grit = (long) Config.getProp(Config.TIME_PERIOD_GRIT_KEY, Config.DEFAULT_PAST_GEN_GRIT);
+
     if(Config.getTimePeriodConf() == null){
       throw new VirtualDeviceRuntimeException("Expected Config.timePeriodConf to not be null");
     }
@@ -90,14 +99,13 @@ public class InfluxDevice extends Device {
         for (Sample sample : this.getSampleList()) {
           String jsonSample = sample.update().toJson();
           sample.setTimestamp(nowInstant);
-          System.out.printf("DEBUG publishing %s \n", jsonSample);
-          System.out.flush();
+          logger.debug(String.format("publishing %s \n", jsonSample));
           SampleWriter.writeSample(sample, this.client, stringFields.get(sample.getName()));
         }
         nowInstant += this.getConfig().getInterval();
         // TODO - if this is necessary find better way
         // pause 100ms to handle backend write
-        LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(100));
+        LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(grit));
       }
     } catch(JsonProcessingException jpe){
       throw new RuntimeException(jpe);
@@ -110,43 +118,28 @@ public class InfluxDevice extends Device {
 
   protected void generateCurrentValues(){
 
-    System.out.println("DEBUG generateCurrentValues()");
+    logger.info("generating current values");
 
     long ttl = System.currentTimeMillis() + Config.getTTL();
 
     try {
       while (System.currentTimeMillis() < ttl) {
-        //      logger.debug(LogHelper.buildMsg(config.getId(),
-        //        "Wait to publish",
-        //        Long.toString((ttl - System.currentTimeMillis()))));
-        //      LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(config.getJitter()));
-        System.out.printf("DEBUG publishing at %d \n", (ttl - System.currentTimeMillis()) );
+        logger.debug(String.format("publishing at %d \n", (ttl - System.currentTimeMillis()) ));
         System.out.flush();
         for (Sample sample : this.getSampleList()) {
           String jsonSample = sample.update().toJson();
-          //        logger.info(LogHelper.buildMsg(sample.getId(), "Publishing", jsonSample));
-//          client.getClient().publish(sample.getTopic(), jsonSample);
-          System.out.printf("DEBUG publishing %s \n", jsonSample);
+          logger.debug(String.format("publishing %s \n", jsonSample));
           System.out.flush();
           SampleWriter.writeSample(sample, this.client, stringFields.get(sample.getName()));
         }
         LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(this.getConfig().getInterval()));
       }
-//      logger.debug(LogHelper.buildMsg(config.getId(),
-//        "Published",
-//        Long.toString((ttl - System.currentTimeMillis()))));
-      System.out.printf("Published at %d\n", (ttl - System.currentTimeMillis()));
-      System.out.flush();
+      logger.debug(String.format("Published at %d\n", (ttl - System.currentTimeMillis())));
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     } finally {
-      System.out.println("DEBUG finally " + (ttl - System.currentTimeMillis()));
-      System.out.flush();  // TODO remove after cleanup of System.out calls
         client.close();
     }
-
-    System.out.println("DEBUG end RUN");
-
   }
 
   @Override

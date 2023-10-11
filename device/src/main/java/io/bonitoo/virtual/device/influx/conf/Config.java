@@ -54,6 +54,12 @@ public class Config {
 
   static TimePeriodConf timePeriodConf = null;
 
+
+  public static final String TIME_PERIOD_GRIT_KEY = "time.period.grit";
+
+  // Small pause to make reading console messages easier
+  public static final long DEFAULT_PAST_GEN_GRIT = 100;
+
   // Converts dot notation variable key to dash separated with caps
   protected static String VMVarKeyToEnvVarKey(String vmVar){
     return ENVAR_PREFIX + "_" + vmVar.toUpperCase().replace(".", "_");
@@ -167,6 +173,10 @@ public class Config {
     return props.get(key);
   }
 
+  public static Object getProp(String key, Object defaultVal){
+    return props.get(key) == null ? defaultVal : props.get(key);
+  }
+
   public static TimePeriodConf getTimePeriodConf(){
     return timePeriodConf;
   }
@@ -181,7 +191,7 @@ public class Config {
     if(EncryptPass.passIsEncoded(encToken)){
       return EncryptPass.decryptPass(Config.class.getCanonicalName().toCharArray(), new String(encToken));
     }
-    System.out.println("DEBUG warning passed token was not encrypted");
+    logger.warn("The passed token was NOT ENCRYPTED");
     return encToken;
   }
 
@@ -194,8 +204,8 @@ public class Config {
     }
 
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
-    logger.info(LogHelper.buildMsg("config", "Reading runner config",
-      props.getProperty("runner.conf")));
+    logger.info(LogHelper.buildMsg("config", "Reading device config",
+      props.getProperty("device.conf")));
 
     InputStream deviceConfStream = loader.getResourceAsStream(props.getProperty("device.conf"));
 
@@ -221,7 +231,7 @@ public class Config {
       }
       logger.info(LogHelper.buildMsg("config",
         "Parse runner config success",
-        props.getProperty("runner.conf")));
+        props.getProperty("device.conf")));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

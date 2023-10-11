@@ -64,7 +64,6 @@ public class InfluxDeviceConfig extends DeviceConfig {
 
   public InfluxDeviceConfig(InfluxDeviceConfig deviceConfig, int num) {
     super(deviceConfig, num);
-    System.out.println("DEBUG config copy constructor id " + this.getId());
     this.client = deviceConfig.getClient();
     this.fluxSamples = new ArrayList<>();
     for(InfluxSampleConfig sample: deviceConfig.getFluxSamples()){
