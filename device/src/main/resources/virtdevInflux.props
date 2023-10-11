@@ -1,5 +1,5 @@
 default.ttl=30000
-device.conf=ossDeviceConfig.yml
+device.conf=ioxDeviceConfigEnc.yml
 measurement.field=name
 generate.past=false
 #time.period.end=-20m

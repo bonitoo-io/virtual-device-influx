@@ -94,8 +94,15 @@ tasks.named<Test>("test") {
     jvmArgs("--add-opens","java.base/java.nio=ALL-UNNAMED")
 }
 
-task("bar"){
-    println("BAR BAR!")
+tasks.register<Jar>("encryptJar"){
+    dependsOn.addAll(listOf("compileJava"))
+    archiveFileName.set("encryptTool.jar")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest { attributes(mapOf("Main-Class" to "io.bonitoo.virtual.device.influx.TokenHelper")) } // Provided we set it up in the application plugin configuration
+    val sourcesMain = sourceSets.main.get()
+    val contents = configurations.runtimeClasspath.get()
+            .map { if (it.isDirectory) it else zipTree(it)} +
+            sourcesMain.output
+    from(contents)
 }
-
 

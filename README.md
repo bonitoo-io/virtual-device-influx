@@ -40,4 +40,9 @@ Essential properties for setting up the device are defined in the file `virtdevI
 
 Note that all of these properties can be declared as environment variables using the prefix `VIRDEV_INFLUX_` and then the desired property in capital letters with the periods replaced by underscores.  e.g. `generate.past` becomes `VIRDEV_INFLUX_GENERATE_PAST`.
    
-A YAML config that defines the device, its samples and their items, will need to be provided.  To better understand its syntax see the documentation for the `virtual-device` project.  Note that for now in this project all samples and items must be defined within the device declaration block.  Forward declaration and then reuse of samples and items is not yet supported.    
+A YAML config that defines the device, its samples and their items, will need to be provided.  To better understand its syntax see the documentation for the `virtual-device` project.  Note that for now in this project all samples and items must be defined within the device declaration block.  Forward declaration and then reuse of samples and items is not yet supported.
+
+## Encrypting tokens 
+
+Tokens can be encrypted using the utility script `scripts/encryptToken.sh`.  Copy the actual token into the console line when prompted.  Then copy the result to the `client.token` field of a YAML configuration file.  
+
