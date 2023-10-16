@@ -14,8 +14,9 @@ Once that prerequisite is met...
    1. `$ docker run --name influxdb -p 8086:8086 influxdb:2.7.1`
    2. In a browser open `http://localhost:8086` and complete on-boarding.  The default configuration is set up for user and org `qa` and a bucket named `TEST_BUCKET`.
    3. Generate a _write_ token for this bucket (or an _All Access_ token) and update the token value in the default config `device/src/main/resources/ossDeviceConfig.yml` with its value.
-2. Run the generator using gradle. e.g. in the root directory of this project `$ ./gradlew run`.  This will generate datapoints at one second intervals for about 30 seconds. 
-3. Verify the generated data in the Influxdb GUI using its Data Explorer feature. 
+2. In the root project directory update the gradle wrapper .  `$ gradle wrapper`
+3. Run the generator using gradle. e.g. in the root directory of this project `$ ./gradlew run`.  This will generate datapoints at one second intervals for about 30 seconds. 
+4. Verify the generated data in the Influxdb GUI using its Data Explorer feature. 
 
 ## Key configuration files
 
