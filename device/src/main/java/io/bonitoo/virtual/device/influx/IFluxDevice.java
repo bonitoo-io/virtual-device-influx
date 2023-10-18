@@ -10,7 +10,10 @@ import io.bonitoo.virtual.device.influx.conf.InfluxDeviceConfig;
 import io.bonitoo.virtual.device.influx.device.InfluxDevice;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 @Setter
 public class IFluxDevice extends io.bonitoo.qa.device.Device {
 
+  static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
   public IFluxDevice(){
  //   super();
     this.setSampleList(new ArrayList<>());
@@ -35,8 +40,8 @@ public class IFluxDevice extends io.bonitoo.qa.device.Device {
     // Start Runner
 
     long startTime = System.currentTimeMillis();
-    System.out.println("DEBUG Start Time " + new Date(startTime));
-    System.out.println("DEBUG Config.getTTL() " + Config.getTTL());
+    logger.info("Start Time  " + new Date(startTime));
+    logger.info("Config.TTL  " + Config.getTTL());
 
     ExecutorService service = Executors.newFixedThreadPool(devices.size());
 
@@ -52,8 +57,32 @@ public class IFluxDevice extends io.bonitoo.qa.device.Device {
 
     service.shutdown();
     long stopTime = System.currentTimeMillis();
-    System.out.println("DEBUG Stop Time " + new Date(stopTime));
-    System.out.println("DEBUG runTime " + (stopTime - startTime));
+    logger.info("Stop Time " + new Date(stopTime));
+    logger.info("Run Time " + (stopTime - startTime) + " ms");
+  }
+
+  private static void generatePast(List<InfluxDevice> devices){
+
+    logger.info("generating past values");
+    logger.info("     start instant " + Config.getTimePeriodConf().getStart());
+    logger.info("     end instant   " + Config.getTimePeriodConf().getStop());
+    logger.info("     grit   " + Config.getProp(Config.TIME_PERIOD_GRIT_KEY, Config.DEFAULT_PAST_GEN_GRIT));
+
+
+    ExecutorService service = Executors.newFixedThreadPool(devices.size());
+
+    devices.forEach(service::execute);
+
+    // Cleanup
+
+    try {
+      boolean terminated = service.awaitTermination(Config.getTTL(), TimeUnit.MILLISECONDS);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+
+    service.shutdown();
+
   }
 
   public static void main(String[] args) throws JsonProcessingException, MalformedURLException {
@@ -62,24 +91,19 @@ public class IFluxDevice extends io.bonitoo.qa.device.Device {
 
     Config.readProps();
 
-    System.out.println("DEBUG Config.props");
     for(Object key: Config.getProps().keySet()){
-      System.out.println("   DEBUG " + key + ":" + Config.getProps().get(key));
+      logger.debug("Config property " + key + ":" + Config.getProps().get(key));
     }
 
     Config.readDeviceConfig();
 
     ObjectWriter owy = new ObjectMapper(new YAMLFactory()).writer().withDefaultPrettyPrinter();
 
-    System.out.println("DEBUG Config.getDeviceConfig()\n" + owy.writeValueAsString(Config.getDeviceConfig()));
-
-    System.out.println("DEBUG count " + Config.getDeviceConfig().getCount());
-
     List<InfluxDevice> devices = new ArrayList<>();
 
     for(int i = 0; i < Config.getDeviceConfig().getCount(); i++){
       InfluxDevice influxDev;
-      System.out.println("DEBUG config.id " + Config.getDeviceConfig().getId());
+      logger.debug("config.id " + Config.getDeviceConfig().getId());
       if(Config.getDeviceConfig().getCount() == 1) {
         influxDev = new InfluxDevice(Config.getDeviceConfig());
       } else {
@@ -89,7 +113,15 @@ public class IFluxDevice extends io.bonitoo.qa.device.Device {
       devices.add(influxDev);
     }
 
-    generateCurrent(devices);
+    logger.info("Target host " + devices.get(0).getClient().getUrl());
+    logger.info("Target org  " + devices.get(0).getClient().getOrg());
+    logger.info("Target db   " + devices.get(0).getClient().getBucket());
+
+    if(Config.generatePast()) {
+      generatePast(devices);
+    }else{
+      generateCurrent(devices);
+    }
 
     // Setup Runner
 

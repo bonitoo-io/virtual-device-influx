@@ -55,8 +55,6 @@ public class InfluxClient {
     ic.url = new URL(config.getHostUrl());
     ic.bucket = config.getBucket();
     ic.org = config.getOrg();
-    System.out.println("DEBUG canonicalName: " + Config.class.getCanonicalName());
-    System.out.println("DEBUG token " + config.getToken());
     char[] token = EncryptPass.passIsEncoded(config.getToken().toCharArray()) ?
       token = EncryptPass.decryptPass(Config.class.getCanonicalName().toCharArray(), config.getToken())
       : config.getToken().toCharArray();

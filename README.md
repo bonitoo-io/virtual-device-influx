@@ -14,15 +14,16 @@ Once that prerequisite is met...
    1. `$ docker run --name influxdb -p 8086:8086 influxdb:2.7.1`
    2. In a browser open `http://localhost:8086` and complete on-boarding.  The default configuration is set up for user and org `qa` and a bucket named `TEST_BUCKET`.
    3. Generate a _write_ token for this bucket (or an _All Access_ token) and update the token value in the default config `device/src/main/resources/ossDeviceConfig.yml` with its value.
-2. Run the generator using gradle. e.g. in the root directory of this project `$ ./gradlew run`.  This will generate datapoints at one second intervals for about 30 seconds. 
-3. Verify the generated data in the Influxdb GUI using its Data Explorer feature. 
+2. In the root project directory update the gradle wrapper: `$ gradle wrapper`.
+3. Run the generator using gradle. e.g. in the root directory of this project `$ ./gradlew run`.  This will generate datapoints at one second intervals for about 30 seconds. 
+4. Verify the generated data in the Influxdb GUI using its Data Explorer feature. 
 
 ## Key configuration files
 
 Essential properties for setting up the device are defined in the file `virtdevInflux.props` in the directory `device/src/main/resources`.  The following properties are recognized. 
 
    * `default.ttl` - a default TTL to be used when generating live data.  This can be overridden in the YAML file specified by `device.conf` - see the next property definition.
-   * `device.conf` - a required property that indicates the name of the YAML config file that configures the device to be run.  Note that this follows the device config structure used in the `virtual-device` project.  One caveat is that, for now, in this project, it is not possible to forward declare items and samples.  These must all be defined within the device definition. 
+   * `device.conf` - a required property that indicates the name of the YAML config file that configures the device to be run.  Note that this follows the device config structure used in the `virtual-device` project.  One caveat is that, for now, in this project, it is not possible to forward declare items and samples.  These must all be defined within the device definition. At present this file needs to reside in a resources directory on the path, e.g. `device/src/main/resources`.
    * `measurement.name` - when serializing String data to `line protocol` format, which is the approach currently chosen for this project, it is necessary to have a String value representing the measurement part of the `line protocol` string.  Each sample created by the device maps to a single `line protocol` data point.  Values for this property can be:
       * `name` - use the sample name property for the measurement. 
       * `id` - use the sample id property for the measurement. 
@@ -40,4 +41,9 @@ Essential properties for setting up the device are defined in the file `virtdevI
 
 Note that all of these properties can be declared as environment variables using the prefix `VIRDEV_INFLUX_` and then the desired property in capital letters with the periods replaced by underscores.  e.g. `generate.past` becomes `VIRDEV_INFLUX_GENERATE_PAST`.
    
-A YAML config that defines the device, its samples and their items, will need to be provided.  To better understand its syntax see the documentation for the `virtual-device` project.  Note that for now in this project all samples and items must be defined within the device declaration block.  Forward declaration and then reuse of samples and items is not yet supported.    
+A YAML config that defines the device, its samples and their items, will need to be provided.  To better understand its syntax see the documentation for the `virtual-device` project.  Note that for now in this project all samples and items must be defined within the device declaration block.  Forward declaration and then reuse of samples and items is not yet supported.
+
+## Encrypting tokens 
+
+Tokens can be encrypted using the utility script `scripts/encryptToken.sh`.  Copy the actual token into the console line when prompted.  Then copy the result to the `client.token` field of a YAML configuration file.  
+
